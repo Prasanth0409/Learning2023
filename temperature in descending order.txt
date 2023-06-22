@@ -1,0 +1,105 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MAX_LINE_LENGTH 100
+#define MAX_ENTRIES 100
+
+
+struct LogEntry {
+    int entryNo;
+    char sensorNo[10];
+    float temperature;
+    int humidity;
+    int light;
+    char time[10];
+};
+
+int readLogEntries(const char *fileName, struct LogEntry entries[]) {
+    FILE *file;
+    char line[MAX_LINE_LENGTH];
+    int entryCount = 0;
+
+ 
+    file = fopen(fileName, "r");
+    if (file == NULL) {
+        printf("Error opening the file.\n");
+        return 0;
+    }
+
+
+    while (fgets(line, MAX_LINE_LENGTH, file) != NULL) {
+      
+        if (strstr(line, "EntryNo") != NULL)
+            continue;
+
+     
+        struct LogEntry entry;
+        sscanf(line, "%d,%[^,],%f,%d,%d,%[^,]", &entry.entryNo, entry.sensorNo, &entry.temperature,
+               &entry.humidity, &entry.light, entry.time);
+
+     
+        entries[entryCount] = entry;
+        entryCount++;
+
+     
+        if (entryCount == MAX_ENTRIES)
+            break;
+    }
+
+    
+    fclose(file);
+
+    return entryCount;
+}
+
+
+void writeLogEntries(const char *fileName, struct LogEntry entries[], int entryCount) {
+    FILE *file;
+
+  
+    file = fopen(fileName, "w");
+    if (file == NULL) {
+        printf("Error creating the file.\n");
+        return;
+    }
+
+    
+    fprintf(file, "EntryNo,sensorNo,Temperature,Humidity,Light,time\n");
+
+ 
+    for (int i = 0; i < entryCount; i++) {
+        struct LogEntry entry = entries[i];
+        fprintf(file, "%d,%s,%.2f,%d,%d,%s\n", entry.entryNo, entry.sensorNo, entry.temperature,
+                entry.humidity, entry.light, entry.time);
+    }
+
+  
+    fclose(file);
+
+    printf("File sorted successfully.\n");
+}
+
+int main() {
+    struct LogEntry entries[MAX_ENTRIES];
+    int entryCount;
+
+   
+    entryCount = readLogEntries("data.csv", entries);
+
+    
+    for (int i = 0; i < entryCount - 1; i++) {
+        for (int j = i + 1; j < entryCount; j++) {
+            if (entries[i].temperature < entries[j].temperature) {
+                struct LogEntry temp = entries[i];
+                entries[i] = entries[j];
+                entries[j] = temp;
+            }
+        }
+    }
+
+  
+    writeLogEntries("sorted_data.csv", entries, entryCount);
+
+    return 0;
+}

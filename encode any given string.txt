@@ -1,0 +1,40 @@
+#include <stdio.h>
+#include <string.h>
+
+void encode(char *str, int key) {
+    int length = strlen(str);
+    for (int i = 0; i < length; i++) {
+        str[i] = str[i] + key; 
+    }
+}
+
+void decode(char *str, int key) {
+    int length = strlen(str);
+    for (int i = 0; i < length; i++) {
+        str[i] = str[i] - key; 
+    }
+}
+
+int main() {
+    char str[100];
+    int key;
+
+    printf("Enter a string: ");
+    fgets(str, sizeof(str), stdin);
+
+    printf("Enter a key: ");
+    scanf("%d", &key);
+
+    
+    str[strcspn(str, "\n")] = '\0';
+
+    printf("\nOriginal String: %s\n", str);
+
+    encode(str, key);
+    printf("Encoded String: %s\n", str);
+
+    decode(str, key);
+    printf("Decoded String: %s\n", str);
+
+    return 0;
+}

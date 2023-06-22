@@ -1,0 +1,46 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Student {
+    char name[50];
+    int rollNumber;
+    float marks;
+};
+
+struct Student* modifyStudent(struct Student* student) {
+    // Modify the members of the structure
+    printf("Enter the new name: ");
+    scanf(" %[^\n]s", student->name);
+
+    printf("Enter the new roll number: ");
+    scanf("%d", &(student->rollNumber));
+
+    printf("Enter the new marks: ");
+    scanf("%f", &(student->marks));
+
+    return student;
+}
+
+int main() {
+    struct Student student;
+    struct Student* modifiedStudent;
+
+    printf("Enter the student details:\n");
+    printf("Name: ");
+    scanf(" %[^\n]s", student.name);
+
+    printf("Roll Number: ");
+    scanf("%d", &(student.rollNumber));
+
+    printf("Marks: ");
+    scanf("%f", &(student.marks));
+
+    modifiedStudent = modifyStudent(&student);
+
+    printf("\nModified Student Details:\n");
+    printf("Name: %s\n", modifiedStudent->name);
+    printf("Roll Number: %d\n", modifiedStudent->rollNumber);
+    printf("Marks: %.2f\n", modifiedStudent->marks);
+
+    return 0;
+}

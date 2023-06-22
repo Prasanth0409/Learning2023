@@ -1,0 +1,42 @@
+#include <stdio.h>
+#include <string.h>
+
+#define MAX_DATA_LENGTH 100
+
+struct SensorData {
+    char sensorID[10];
+    float temperature;
+    int humidity;
+    int lightIntensity;
+};
+
+void parseData(const char* data, struct SensorData* sensor) {
+    sscanf(data, "%[^-]-%*[^:]:%f-%*[^:]:%d-%*[^:]:%d", sensor->sensorID, &sensor->temperature, &sensor->humidity, &sensor->lightIntensity);
+}
+
+void printSensorInfo(const struct SensorData* sensor) {
+    printf("Sensor Info:\n");
+    printf("---------------------\n");
+    printf("Sensor ID: %s\n", sensor->sensorID);
+    printf("Temperature: %.1f C\n", sensor->temperature);
+    printf("Humidity: %d\n", sensor->humidity);
+    printf("Light Intensity: %d%%\n", sensor->lightIntensity);
+}
+
+int main() {
+    char data[MAX_DATA_LENGTH];
+    struct SensorData sensor;
+
+    
+    printf("Enter data: ");
+    fgets(data, sizeof(data), stdin);
+    data[strcspn(data, "\n")] = '\0';  
+
+    
+    parseData(data, &sensor);
+
+    
+    printSensorInfo(&sensor);
+
+    return 0;
+}

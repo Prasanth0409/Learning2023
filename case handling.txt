@@ -1,0 +1,36 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+
+
+void toUpperCase(char *str) {
+    while (*str) {
+        *str = toupper(*str);
+        str++;
+    }
+}
+
+
+void toLowerCase(char *str) {
+    while (*str) {
+        *str = tolower(*str);
+        str++;
+    }
+}
+
+
+void toSentenceCase(char *str) {
+    int len = strlen(str);
+    if (len > 0) {
+        *str = toupper(*str);
+        for (int i = 1; i < len; i++) {
+            if (str[i - 1] == ' ')
+                str[i] = toupper(str[i]);
+            else
+                str[i] = tolower(str[i]);
+        }
+    }
+}
+
+

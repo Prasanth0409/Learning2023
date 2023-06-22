@@ -1,0 +1,67 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MAX_LINE_LENGTH 100
+#define MAX_ENTRIES 100
+
+
+struct LogEntry {
+    int entryNo;
+    char sensorNo[10];
+    float temperature;
+    int humidity;
+    int light;
+    char time[10];
+};
+
+
+int extractLogEntries(const char *fileName, struct LogEntry entries[]) {
+    FILE *file;
+    char line[MAX_LINE_LENGTH];
+    int entryCount = 0;
+
+   
+    file = fopen(fileName, "r");
+    if (file == NULL) {
+        printf("Error opening the file.\n");
+        return 0;
+    }
+
+  
+    while (fgets(line, MAX_LINE_LENGTH, file) != NULL) {
+        
+        if (strstr(line, "EntryNo") != NULL)
+            continue;
+
+        
+        struct LogEntry entry;
+        sscanf(line, "%d,%[^,],%f,%d,%d,%[^,]", &entry.entryNo, entry.sensorNo, &entry.temperature,
+               &entry.humidity, &entry.light, entry.time);
+
+        
+        entries[entryCount] = entry;
+        entryCount++;
+
+        
+        if (entryCount == MAX_ENTRIES)
+            break;
+    }
+
+    
+    fclose(file);
+
+    return entryCount;
+}
+
+void displayLogEntries(struct LogEntry entries[], int entryCount) {
+    printf("Log Entries:\n");
+    printf("-------------------------\n");
+    for (int i = 0; i < entryCount; i++) {
+        struct LogEntry entry = entries[i];
+        printf("Entry No: %d\n", entry.entryNo);
+        printf("Sensor No: %s\n", entry.sensorNo);
+        printf("Temperature: %.2f\n", entry.temperature);
+        printf("Humidity: %d\n", entry.humidity);
+        printf("Light: %d\n", entry.light);
+}

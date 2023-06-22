@@ -1,0 +1,38 @@
+#include <stdio.h>
+
+int compare_boxes(int boxA[], int boxB[], int size) {
+    int foundMatch;
+    
+    for (int i = 0; i < size; i++) {
+        foundMatch = 0;
+        
+        for (int j = 0; j < size; j++) {
+            if (boxA[i] == boxB[j]) {
+                foundMatch = 1;
+                break;
+            }
+        }
+        
+        if (!foundMatch) {
+            return 0;
+        }
+    }
+    
+    return 1;
+}
+
+int main() {
+    int boxA[] = {200, 10, -90};
+    int boxB[] = {-90, 200, 10};
+    int size = sizeof(boxA) / sizeof(boxA[0]);
+
+    int result = compare_boxes(boxA, boxB, size);
+
+    if (result) {
+        printf("Boxes have a one-to-one mapping of items.\n");
+    } else {
+        printf("Boxes do not have a one-to-one mapping of items.\n");
+    }
+
+    return 0;
+}

@@ -1,0 +1,93 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MAX_LINE_LENGTH 100
+#define MAX_ENTRIES 100
+
+
+struct LogEntry {
+    int entryNo;
+    char sensorNo[10];
+    float temperature;
+    int humidity;
+    int light;
+    char time[10];
+};
+
+void updateEntry(const char *fileName, int entryNo, const struct LogEntry *updatedEntry) {
+    FILE *file, *tempFile;
+    char line[MAX_LINE_LENGTH];
+
+  
+    file = fopen(fileName, "r");
+    if (file == NULL) {
+        printf("Error opening the file.\n");
+        return;
+    }
+
+    
+    tempFile = fopen("temp.csv", "w");
+    if (tempFile == NULL) {
+        printf("Error creating the temporary file.\n");
+        fclose(file);
+        return;
+    }
+
+   
+    while (fgets(line, MAX_LINE_LENGTH, file) != NULL) {
+       
+        if (strstr(line, "EntryNo") != NULL) {
+            fputs(line, tempFile);
+            continue;
+        }
+
+        
+        int currentEntryNo;
+        sscanf(line, "%d,", &currentEntryNo);
+
+        
+        if (currentEntryNo == entryNo) {
+          
+            fprintf(tempFile, "%d,%s,%.2f,%d,%d,%s\n", updatedEntry->entryNo, updatedEntry->sensorNo,
+                    updatedEntry->temperature, updatedEntry->humidity, updatedEntry->light, updatedEntry->time);
+        } else {
+            
+            fputs(line, tempFile);
+        }
+    }
+
+    // Close the files
+    fclose(file);
+    fclose(tempFile);
+
+  
+    if (remove(fileName) == 0 && rename("temp.csv", fileName) == 0)
+        printf("Entry updated successfully.\n");
+    else
+        printf("Error updating the entry.\n");
+}
+
+int main() {
+    struct LogEntry updatedEntry;
+
+  
+    printf("Enter the updated entry details:\n");
+    printf("Entry No: ");
+    scanf("%d", &updatedEntry.entryNo);
+    printf("Sensor No: ");
+    scanf("%s", updatedEntry.sensorNo);
+    printf("Temperature: ");
+    scanf("%f", &updatedEntry.temperature);
+    printf("Humidity: ");
+    scanf("%d", &updatedEntry.humidity);
+    printf("Light: ");
+    scanf("%d", &updatedEntry.light);
+    printf("Time: ");
+    scanf("%s", updatedEntry.time);
+
+    
+    updateEntry("data.csv", updatedEntry.entryNo, &updatedEntry);
+
+    return 0;
+}

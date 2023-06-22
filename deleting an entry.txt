@@ -1,0 +1,69 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MAX_LINE_LENGTH 100
+#define MAX_ENTRIES 100
+
+
+void deleteEntry(const char *fileName, int entryNo) {
+    FILE *file, *tempFile;
+    char line[MAX_LINE_LENGTH];
+
+   
+    file = fopen(fileName, "r");
+    if (file == NULL) {
+        printf("Error opening the file.\n");
+        return;
+    }
+
+    
+    tempFile = fopen("temp.csv", "w");
+    if (tempFile == NULL) {
+        printf("Error creating the temporary file.\n");
+        fclose(file);
+        return;
+    }
+
+    
+    while (fgets(line, MAX_LINE_LENGTH, file) != NULL) {
+      
+        if (strstr(line, "EntryNo") != NULL) {
+            fputs(line, tempFile);
+            continue;
+        }
+
+        
+        int currentEntryNo;
+        sscanf(line, "%d,", &currentEntryNo);
+
+        
+        if (currentEntryNo != entryNo) {
+            
+            fputs(line, tempFile);
+        }
+    }
+
+  
+    fclose(file);
+    fclose(tempFile);
+
+    
+    if (remove(fileName) == 0 && rename("temp.csv", fileName) == 0)
+        printf("Entry deleted successfully.\n");
+    else
+        printf("Error deleting the entry.\n");
+}
+
+int main() {
+    int entryNo;
+
+ 
+    printf("Enter the entry number to delete: ");
+    scanf("%d", &entryNo);
+
+   
+    deleteEntry("data.csv", entryNo);
+
+    return 0;
+}

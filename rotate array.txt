@@ -1,0 +1,60 @@
+#include <stdio.h>
+#include <string.h>
+
+struct Student {
+    int rollno;
+    char name[20];
+    float marks;
+};
+
+void rotateArray(struct Student* students, int size, int K) {
+    struct Student temp[K];
+
+ 
+    for (int i = 0; i < K; i++) {
+        temp[i] = students[i];
+    }
+
+    
+    for (int i = K; i < size; i++) {
+        students[i - K] = students[i];
+    }
+
+   
+    for (int i = 0; i < K; i++) {
+        students[size - K + i] = temp[i];
+    }
+}
+
+int main() {
+    int size;
+
+    printf("Enter the number of students: ");
+    scanf("%d", &size);
+
+    
+    struct Student* students = (struct Student*)malloc(size * sizeof(struct Student));
+
+   
+
+    int K;
+    printf("Enter the number of positions to rotate: ");
+    scanf("%d", &K);
+
+    
+    rotateArray(students, size, K);
+
+    
+    printf("\nRotated Array of Structures:\n");
+    for (int i = 0; i < size; i++) {
+        printf("Student %d:\n", i + 1);
+        printf("Roll Number: %d\n", students[i].rollno);
+        printf("Name: %s\n", students[i].name);
+        printf("Marks: %.2f\n\n", students[i].marks);
+    }
+
+    
+    free(students);
+
+    return 0;
+}

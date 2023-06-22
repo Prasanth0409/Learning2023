@@ -1,0 +1,38 @@
+#include <stdio.h>
+
+
+struct Box {
+    float length;
+    float width;
+    float height;
+};
+
+
+float calculateVolume(struct Box* box) {
+    return box->length * box->width * box->height;
+}
+
+
+float calculateSurfaceArea(struct Box* box) {
+    return 2 * (box->length * box->width + box->length * box->height + box->width * box->height);
+}
+
+int main() {
+    struct Box myBox;
+    struct Box* boxPtr = &myBox;
+
+    
+    myBox.length = 2.5;
+    myBox.width = 3.2;
+    myBox.height = 4.0;
+
+    
+    printf("Volume (indirection): %.2f\n", (*boxPtr).length * (*boxPtr).width * (*boxPtr).height);
+    printf("Surface Area (indirection): %.2f\n", 2 * ((*boxPtr).length * (*boxPtr).width + (*boxPtr).length * (*boxPtr).height + (*boxPtr).width * (*boxPtr).height));
+
+    
+    printf("Volume (arrow operator): %.2f\n", boxPtr->length * boxPtr->width * boxPtr->height);
+    printf("Surface Area (arrow operator): %.2f\n", 2 * (boxPtr->length * boxPtr->width + boxPtr->length * boxPtr->height + boxPtr->width * boxPtr->height));
+
+    return 0;
+}

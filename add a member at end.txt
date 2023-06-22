@@ -1,0 +1,58 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+struct Student {
+    int rollno;
+    char name[20];
+    float marks;
+};
+
+struct Student* addMember(struct Student* students, int* size) {
+    
+    (*size)++;
+
+    
+    students = (struct Student*)realloc(students, (*size) * sizeof(struct Student));
+
+    
+    printf("Enter the roll number of the new student: ");
+    scanf("%d", &(students[*size - 1].rollno));
+
+    printf("Enter the name of the new student: ");
+    scanf("%s", students[*size - 1].name);
+
+    printf("Enter the marks of the new student: ");
+    scanf("%f", &(students[*size - 1].marks));
+
+    return students;
+}
+
+int main() {
+    int size;
+
+    printf("Enter the initial number of students: ");
+    scanf("%d", &size);
+
+    
+    struct Student* students = (struct Student*)malloc(size * sizeof(struct Student));
+
+    
+
+    
+    students = addMember(students, &size);
+
+    
+    printf("\nUpdated Array of Structures:\n");
+    for (int i = 0; i < size; i++) {
+        printf("Student %d:\n", i + 1);
+        printf("Roll Number: %d\n", students[i].rollno);
+        printf("Name: %s\n", students[i].name);
+        printf("Marks: %.2f\n\n", students[i].marks);
+    }
+
+    
+    free(students);
+
+    return 0;
+}
